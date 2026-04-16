@@ -1,47 +1,50 @@
-const express = require('express');
-const app = express();
-app.use(express.json());
+const LivroService = require('./livro-service');
 
-app.post('/api/livros', (req, res) => {
-    const erroValidacao = validarLivro(req.body);
-    if (erroValidacao) return res.status(400).json({ erro: erroValidacao });
-
-    const { nome, preco, categoria } = req.body;
-    
-    if (livros.some(l => l.nome.toLowerCase() === nome.trim().toLowerCase())) {
-        return res.status(409).json({ erro: "Esse livro já está cadastrado." });
+class LivroController {
+    getTodos = async (req, res) => {
+        try {
+            const livros = await LivroService.buscarTodos();
+            res.json(livros);
+        } catch (err) {
+            res.status(err.status || 500).json({ erro: err.message });
+        }
     }
 
-    const novoLivro = { id: proximoId++, nome: nome.trim(), preco, categoria: categoria.trim() };
-    livros.push(novoLivro);
-    res.status(201).json(novoLivro);
-});
+    getPorID = async (req, res) => {
+        try {
+            const livro = await LivroService.buscarPorId(req.params.id);
+            res.json(livro);
+        } catch (err) {
+            res.status(err.status || 500).json({ erro: err.message });
+        }
+    }
 
-app.get('/api/livros', (req, res) => {
-    res.json(livros);
-});
+    create = async (req, res) => {
+        try {
+            const novo = await LivroService.criar(req.body);
+            res.status(201).json(novo);
+        } catch (err) {
+            res.status(err.status || 400).json({ erro: err.message });
+        }
+    }
 
-app.put('/api/livros/:id', (req, res) => {
-    const id = parseInt(req.params.id);
-    const index = livros.findIndex(l => l.id === id);
+    update = async (req, res) => {
+        try {
+            const atualizado = await LivroService.atualizar(req.params.id, req.body);
+            res.json(atualizado);
+        } catch (err) {
+            res.status(err.status || 400).json({ erro: err.message });
+        }
+    }
 
-    if (index === -1) return res.status(404).json({ erro: "Livro não encontrado" });
+    delete = async (req, res) => {
+        try {
+            await LivroService.deletar(req.params.id);
+            res.status(204).send();
+        } catch (err) {
+            res.status(err.status || 400).json({ erro: err.message });
+        }
+    }
+}
 
-    const erroValidacao = validarLivro(req.body);
-    if (erroValidacao) return res.status(400).json({ erro: erroValidacao });
-
-    const { nome, preco, categoria } = req.body;
-    
-    livros[index] = { id, nome: nome.trim(), preco, categoria: categoria.trim() };
-    res.json(livros[index]);
-});
-
-app.delete('/api/livros/:id', (req, res) => {
-    const id = parseInt(req.params.id);
-    const index = livros.findIndex(l => l.id === id);
-
-    if (index === -1) return res.status(404).json({ erro: "Livro não encontrado." });
-
-    livros.splice(index, 1);
-    res.status(204).send();
-});
+module.exports = new LivroController();
