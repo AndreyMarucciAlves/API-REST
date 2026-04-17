@@ -23,18 +23,6 @@ Abaixo estão em destaque todos os requisitos exigidos para a entrega (16/04) e 
 
 ---
 
-## 📂 Arquitetura de Pastas
-
-* **API/controllers/**: Controladores (recebem as requisições e enviam respostas)
-* **API/core/**: Middlewares e configuração de Rotas principais
-* **API/schemas/**: Validações Joi para os dados de entrada
-* **API/services/**: Regras de negócio da aplicação
-* **API/data/**: Gerenciamento e persistência do Banco de Dados (DBManager e SQLite)
-* **index.js**: Ponto de entrada da aplicação Express
-* **APIREST.postman_collection.json**: Collection para importar no Postman
-
----
-
 ## 🚀 Instruções de Instalação e Execução
 
 Siga os passos abaixo para rodar a API localmente na sua máquina:
@@ -84,3 +72,32 @@ Siga os passos abaixo para rodar a API localmente na sua máquina:
 **Deletar um Livro**
 * **Rota:** `DELETE /api/livros/:id`
 * **Retorna:** `204 No Content` em caso de sucesso.
+
+---
+
+## 📂 Arquitetura de Pastas
+
+O projeto adota uma arquitetura em camadas (Controllers, Services, Data, Schemas) para facilitar a manutenção e separar responsabilidades.
+
+```text
+📦 APIEXPRESSCOMPLETA
+ ┣ 📂 API
+ ┃ ┣ 📂 controllers       # Controladores (recebem as requisições e enviam respostas)
+ ┃ ┃ ┣ 📜 auth-controller.js
+ ┃ ┃ ┗ 📜 livro-controller.js
+ ┃ ┣ 📂 core              # Middlewares e configuração de Rotas principais
+ ┃ ┃ ┣ 📜 auth-middleware.js
+ ┃ ┃ ┗ 📜 rotas.js
+ ┃ ┣ 📂 schemas           # Validações Joi para os dados de entrada
+ ┃ ┃ ┣ 📜 auth-schema.js
+ ┃ ┃ ┗ 📜 livro-schemas.js
+ ┃ ┣ 📂 services          # Regras de negócio da aplicação
+ ┃ ┃ ┣ 📜 auth-service.js
+ ┃ ┃ ┗ 📜 livro-service.js
+ ┃ ┗ 📂 data              # Gerenciamento e persistência do Banco de Dados
+ ┃   ┣ 📜 DB.sqlite       # Banco de dados (gerado automaticamente)
+ ┃   ┗ 📜 DBManager.js    # Conexão, criação de tabelas e auto-população
+ ┣ 📜 index.js            # Ponto de entrada da aplicação Express
+ ┣ 📜 package.json        # Dependências do projeto
+ ┗ 📜 APIREST.postman_collection.json # Collection para importar no Postman
+
