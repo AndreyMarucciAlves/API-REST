@@ -44,6 +44,14 @@ class DBManager {
                 FOREIGN KEY (categoria_id) REFERENCES categorias(id)
             )
         `);
+
+        self.db.run(`
+            CREATE TABLE IF NOT EXISTS usuarios(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT NOT NULL UNIQUE,
+                password TEXT NOT NULL
+            )
+        `);
     }
 
     _PopularBancoCategoriaSeVazio() {
@@ -197,6 +205,25 @@ class DBManager {
             });
         });
     }
+
+    buscarUsuario(username) {
+        return new Promise((resolve, reject) => {
+            this.db.get("SELECT * FROM usuarios WHERE username = ?", [username], (err, row) => {
+                if (err) reject(err);
+                else resolve(row);
+            });
+        });
+    }
+
+    inserirUsuario(username, password) {
+        return new Promise((resolve, reject) => {
+            this.db.run("INSERT INTO usuarios (username, password) VALUES (?, ?)", [username, password], function(err) {
+                if (err) reject(err);
+                else resolve({ id: this.lastID, username });
+            });
+        });
+    }
 }
+
 
 module.exports = new DBManager();

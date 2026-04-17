@@ -22,7 +22,7 @@ app.use('/api', rotas);
 app.use((req, res) => {
     res.status(404).json({
         erro: "Rota não encontrada",
-        detalhe: `O caminho ${req.originalUrl} para o método ${req.method} não existe. Verifique se esqueceu o ID na URL.`
+        detalhe: `O caminho ${req.originalUrl} para o método ${req.method} não existe.Verifique se esqueceu o ID na URL ou se a rota existe.`
     });
 });
 
