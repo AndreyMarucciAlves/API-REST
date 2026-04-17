@@ -3,7 +3,7 @@ node_modules/
 
 *.sqlite
 *.db
-*.json
+
 logs
 *.log
 npm-debug.log*
