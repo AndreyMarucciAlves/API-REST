@@ -18,141 +18,69 @@ Abaixo estão em destaque todos os requisitos exigidos para a entrega (16/04) e 
 - [x] **Instruções de instalação:** Passo a passo detalhado abaixo.
 - [x] **Autenticação JWT:** Sistema de login e registro gerando tokens JWT válidos por 1 hora. Rotas de livros protegidas por middleware.
 - [x] **Relacionamentos (JOINs):** Busca de livros realiza um `INNER JOIN` com a tabela de categorias para trazer o nome real da categoria.
-- [ ] **Testes automatizados:** *(Atenção: Adicione aqui o comando dos testes caso tenha implementado, ex: `npm test`)*
-- [ ] **Deploy:** O projeto está no ar! Acesse: **[COLOQUE_SEU_LINK_DO_RENDER_OU_RAILWAY_AQUI]**
+- [ ] **Testes automatizados:** (Atenção: Adicione aqui o comando dos testes caso tenha implementado)
+- [ ] **Deploy:** O projeto está no ar! Acesse: **[COLOQUE_SEU_LINK_AQUI]**
 
 ---
 
 ## 📂 Arquitetura de Pastas
 
-O projeto adota uma arquitetura em camadas (Controllers, Services, Data, Schemas) para facilitar a manutenção e separar responsabilidades.
+* **API/controllers/**: Controladores (recebem as requisições e enviam respostas)
+* **API/core/**: Middlewares e configuração de Rotas principais
+* **API/schemas/**: Validações Joi para os dados de entrada
+* **API/services/**: Regras de negócio da aplicação
+* **API/data/**: Gerenciamento e persistência do Banco de Dados (DBManager e SQLite)
+* **index.js**: Ponto de entrada da aplicação Express
+* **APIREST.postman_collection.json**: Collection para importar no Postman
 
-```text
-📦 APIEXPRESSCOMPLETA
- ┣ 📂 API
- ┃ ┣ 📂 controllers       # Controladores (recebem as requisições e enviam respostas)
- ┃ ┃ ┣ 📜 auth-controller.js
- ┃ ┃ ┗ 📜 livro-controller.js
- ┃ ┣ 📂 core              # Middlewares e configuração de Rotas principais
- ┃ ┃ ┣ 📜 auth-middleware.js
- ┃ ┃ ┗ 📜 rotas.js
- ┃ ┣ 📂 schemas           # Validações Joi para os dados de entrada
- ┃ ┃ ┣ 📜 auth-schema.js
- ┃ ┃ ┗ 📜 livro-schemas.js
- ┃ ┣ 📂 services          # Regras de negócio da aplicação
- ┃ ┃ ┣ 📜 auth-service.js
- ┃ ┃ ┗ 📜 livro-service.js
- ┃ ┗ 📂 data              # Gerenciamento e persistência do Banco de Dados
- ┃   ┣ 📜 DB.sqlite       # Banco de dados (gerado automaticamente)
- ┃   ┗ 📜 DBManager.js    # Conexão, criação de tabelas e auto-população
- ┣ 📜 index.js            # Ponto de entrada da aplicação Express
- ┣ 📜 package.json        # Dependências do projeto
- ┗ 📜 APIREST.postman_collection.json # Collection para importar no Postman
+---
 
-🚀 Instruções de Instalação e Execução
+## 🚀 Instruções de Instalação e Execução
+
 Siga os passos abaixo para rodar a API localmente na sua máquina:
 
-Clone o repositório (ou extraia os arquivos zipados).
+1. **Clone o repositório** (ou extraia os arquivos zipados).
+2. Abra o terminal na pasta raiz do projeto.
+3. Instale as dependências executando o comando: `npm install`
+4. Inicie o servidor rodando: `npm start` (ou `node index.js`)
+5. **Pronto!** O console exibirá: `Servidor on: http://localhost:3000/api/livros`. Na primeira execução, o arquivo `DB.sqlite` será criado automaticamente e populado com 20 registros.
 
-Abra o terminal na pasta raiz do projeto.
+---
 
-Instale as dependências executando o comando:
+## 🛣️ Rotas da API e Exemplos
 
-npm install
+### 🔐 1. Autenticação (Rotas Públicas)
 
-Inicie o servidor rodando:
-npm start
-# ou
-node index.js
+**Registrar Novo Usuário**
+* **Rota:** `POST /api/registrar`
+* **Body JSON:** `{"username": "aluno2ano", "password": "minhasenha123"}`
 
-Pronto! O console exibirá: Servidor on: http://localhost:3000/api/livros. Na primeira execução, o arquivo DB.sqlite será criado automaticamente e populado com 20 registros.
+**Fazer Login (Gera o Token JWT)**
+* **Rota:** `POST /api/login`
+* **Body JSON:** `{"username": "aluno2ano", "password": "minhasenha123"}`
+* **Retorno:** `{ "token": "eyJhbGciOiJIUzI1NiIs..." }`
 
-🛣️ Rotas da API e Exemplos
-🔐 1. Autenticação (Rotas Públicas)
-Registrar Novo Usuário
+---
 
-Rota: POST /api/registrar
+### 📖 2. Gerenciamento de Livros (Rotas Protegidas)
+> **Atenção:** Todas as rotas abaixo exigem o Header `Authorization: Bearer <seu_token>` gerado no login.
 
-Body JSON:
+**Listar Livros (Com Paginação, Filtros e JOIN)**
+* **Rota:** `GET /api/livros`
+* **Query Params Suportados:** `?nome=Harry` | `?pagina=1&limite=10` | `?ordem=DESC`
+* **Exemplo de URL:** `GET /api/livros?limite=5&pagina=1&ordem=DESC`
 
-JSON
-{
-  "username": "aluno2ano",
-  "password": "minhasenha123"
-}
-Fazer Login (Gera o Token JWT)
+**Buscar Livro por ID**
+* **Rota:** `GET /api/livros/:id`
 
-Rota: POST /api/login
+**Criar Novo Livro**
+* **Rota:** `POST /api/livros`
+* **Body JSON:** `{"nome": "O Senhor dos Anéis", "preco": 120.50, "categoria_id": 1}`
 
-Body JSON:
+**Atualizar um Livro Existente**
+* **Rota:** `PUT /api/livros/:id`
+* **Body JSON:** `{"preco": 99.90}`
 
-JSON
-{
-  "username": "aluno2ano",
-  "password": "minhasenha123"
-}
-Retorno: { "token": "eyJhbGciOiJIUzI1NiIs..." }
-
-📖 2. Gerenciamento de Livros (Rotas Protegidas)
-Atenção: Todas as rotas abaixo exigem o Header Authorization: Bearer <seu_token> gerado no login.
-
-Listar Livros (Com Paginação, Filtros e JOIN)
-
-Rota: GET /api/livros
-
-Query Params Suportados:
-
-?nome=Harry (Filtra pelo nome)
-
-?pagina=1&limite=10 (Paginação)
-
-?ordem=DESC (Ordenação por ID, aceita ASC ou DESC)
-
-Exemplo de URL completa: GET /api/livros?limite=5&pagina=1&ordem=DESC
-
-Buscar Livro por ID
-
-Rota: GET /api/livros/:id
-
-Exemplo: GET /api/livros/5
-
-Criar Novo Livro
-
-Rota: POST /api/livros
-
-Body JSON:
-
-JSON
-{
-  "nome": "O Senhor dos Anéis",
-  "preco": 120.50,
-  "categoria_id": 1
-}
-(Categorias válidas: 1: Ficção científica, 2: Romance, 3: Acadêmico, 4: Futebol)
-
-Atualizar um Livro Existente
-
-Rota: PUT /api/livros/:id
-
-Body JSON: (Permite enviar apenas os campos que deseja alterar)
-
-JSON
-{
-  "preco": 99.90
-}
-Deletar um Livro
-
-Rota: DELETE /api/livros/:id
-
-Retorna: 204 No Content em caso de sucesso.
-
-🛠️ Tecnologias Utilizadas
-Node.js com Express (Roteamento e Servidor Web)
-
-SQLite3 (Banco de Dados relacional, rápido e local)
-
-JsonWebToken (JWT) (Segurança e controle de sessão)
-
-Bcrypt.js (Criptografia avançada de senhas)
-
-Joi (Validações restritas dos dados da requisição)
+**Deletar um Livro**
+* **Rota:** `DELETE /api/livros/:id`
+* **Retorna:** `204 No Content` em caso de sucesso.
