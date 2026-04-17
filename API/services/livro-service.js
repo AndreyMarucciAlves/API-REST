@@ -1,4 +1,4 @@
-const DBManager = require('../data/DBManager');
+const DBManager = require('../../data/DBManager');
 
 class LivroService {
     

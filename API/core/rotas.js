@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const livroController = require('./livro-controller');
-const authController = require('./controllers/auth-controller');
+const livroController = require('../controllers/livro-controller');
+const authController = require('../controllers/auth-controller');
 const verificarJWT = require('./auth-middleware');
-const { validarAuth } = require('./auth-schema');
+const { validarAuth } = require('../schemas/auth-schema');
 const { 
     validarCriacaoLivro, 
     validarAtualizacaoLivro, 
     validarIdURL 
-} = require('./livro-schemas'); 
+} = require('../schemas/livro-schemas'); 
 
 
 router.post('/registrar', validarAuth, authController.registrar);

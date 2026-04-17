@@ -1,4 +1,4 @@
-const LivroService = require('./livro-service');
+const LivroService = require('../services/livro-service');
 class LivroController {
     
     /**
