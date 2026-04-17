@@ -1,5 +1,5 @@
 const express = require('express');
-const rotas = require('./API/rotas');
+const rotas = require('./API/core/rotas');
 
 const app = express();
 app.use(express.json());

@@ -1,4 +1,4 @@
-const AuthService = require('./auth-service');
+const AuthService = require('../services/auth-service');
 const jwt = require('jsonwebtoken');
 const SECRET = 'segredo';
 

@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs');
-const DBManager = require('../data/DBManager');
+const DBManager = require('../../data/DBManager');
 
 class AuthService {
     async registrar(username, password) {
